@@ -1,11 +1,12 @@
-import { Button } from "ui";
+import { Button, TopNav } from "ui";
 
 export default function Web() {
   return (
     <div>
-      <h1 className="font-serif text-red-100">Web</h1>
+      <TopNav logo="http://via.placeholder.com/640x360" logoText="Logo" />
+      <h1>Web</h1>
       <p className="font-bold">hello</p>
-      <Button />
+      <Button onClick={() => console.log("hello")}>Hello</Button>
     </div>
   );
 }

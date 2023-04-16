@@ -1,5 +1,17 @@
 import * as React from "react";
 
-export const Button = () => {
-  return <button>Boop</button>;
+interface IButton {
+  children: string;
+  onClick: () => void;
+}
+
+export const Button = ({ children, onClick }: IButton) => {
+  return (
+    <button
+      onClick={onClick}
+      className="font-bold bg-emerald-700 text-white rounded-md py-2 px-3"
+    >
+      {children}
+    </button>
+  );
 };
