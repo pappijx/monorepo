@@ -36,7 +36,7 @@ export default function Page() {
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    fetch("http://localhost:3003/api/signup", {
+    fetch("/api/auth/registeruser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

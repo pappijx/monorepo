@@ -7,6 +7,8 @@ interface IRootLayout {
   children: React.ReactNode;
 }
 export default function RootLayout({ children }: IRootLayout) {
+  console.log("main layout");
+
   return (
     <html lang="en">
       <body>

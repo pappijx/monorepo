@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 
 import { Request, Response } from "express";
 import { userModal } from "../Models/user.model";
-import { encryptStrings } from "../utils/encryption";
 
 const signup = async (req: Request, res: Response) => {
   try {
@@ -42,19 +41,16 @@ const signup = async (req: Request, res: Response) => {
 const signin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+
     if (!(email && password)) {
       throw { message: "All fields are required" };
     }
-    console.log(email, password);
-
     const userFound: any = await userModal.findOne({ email });
-    if (userFound === null) {
-      throw { message: "Invalid User" };
+    if (!userFound) {
+      throw { message: "Invalid Credentials" };
     }
-
     const passwordCheck = await bcrypt.compare(password, userFound?.password);
     if (userFound && passwordCheck) {
-      console.log(email, password);
       const token = jwt.sign(
         {
           id: userFound._id,
@@ -66,27 +62,38 @@ const signin = async (req: Request, res: Response) => {
           expiresIn: "2h",
         }
       );
-      console.log(email, password);
       userFound.token = token;
       userFound.password = undefined;
-
-      // set cookies
-      const options = {
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      };
-
       // send token in user cookie
-      res.status(200).cookie("token", token, options).json({
+      res.status(200).json({
         success: true,
         message: "",
         token,
       });
+    } else {
+      throw { message: "Invalid Credentials" };
     }
-    // match password
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-export { signup, signin };
+const verifyToken = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.headers;
+    if (token) {
+      jwt.verify(token, process.env.ENV_SECRET_STRING);
+      res.status(200).json({
+        message: "User Validated Successfully",
+      });
+    } else {
+      throw { message: "Invalid Token" };
+    }
+  } catch (err) {
+    res.status(400).json({
+      message: err.message,
+    });
+  }
+};
+
+export { signup, signin, verifyToken };
