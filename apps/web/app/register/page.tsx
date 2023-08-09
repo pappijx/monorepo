@@ -7,9 +7,12 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  IconButton,
   Input,
 } from "@chakra-ui/react";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface IRegistration {
   name: string;
@@ -19,6 +22,7 @@ interface IRegistration {
 }
 
 export default function Page() {
+  const router = useRouter();
   const [registration, setRegistration] = useState<IRegistration>({
     name: "",
     email: "",
@@ -67,7 +71,15 @@ export default function Page() {
         border="1px"
         gap="1rem"
       >
-        <Heading>Login</Heading>
+        <Flex gap="1rem" alignItems="center">
+          <IconButton
+            onClick={() => router.push("/")}
+            aria-label={"back"}
+            variant="ghost"
+            icon={<ChevronLeftIcon fontSize="2xl" />}
+          />
+          <Heading>Login</Heading>
+        </Flex>
 
         <form onSubmit={onSubmit}>
           <Flex direction="column" gap="1rem">
